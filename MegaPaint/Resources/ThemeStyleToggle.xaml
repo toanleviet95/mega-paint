@@ -1,0 +1,109 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:MegaPaint.Resources">
+    <Style x:Key="dgFocusVisualStyte" >
+    <Setter Property="Control.Template">
+        <Setter.Value>
+            <ControlTemplate>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30*" />
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="2*" />
+                    </Grid.RowDefinitions>
+                    <Border BorderThickness="2" BorderBrush="#38abcf" />
+                </Grid>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+    </Style>
+    <Style x:Key="ToggleButtonStyle" TargetType="ToggleButton">
+        <Setter Property="Background" Value="#d9d9d9"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="#d9d9d9" />
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource dgFocusVisualStyte}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30*" />
+                            <ColumnDefinition Width="30*" />
+                            <ColumnDefinition Width="30*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30*" />
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="2*" />
+                        </Grid.RowDefinitions>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="ShapeOn" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="ShapeOff" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="ShapeOff" Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.3" />
+                                        <DoubleAnimation Storyboard.TargetName="ShapeOn" Storyboard.TargetProperty="Opacity" To="0.5" Duration="0:0:0.3" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Indeterminate">
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border Grid.ColumnSpan="3"
+                            BorderThickness="2"
+                            BorderBrush="{TemplateBinding Background}"
+                            Background="{TemplateBinding Background}"/>
+
+                        <Path x:Name="ShapeOff"
+                          Grid.Column="0" Grid.ColumnSpan="2"
+                          Data="M0,0 L60,0 30,30 0,30 z"
+                          Stretch="Fill"
+                          Fill="Black" HorizontalAlignment="Left" />
+                        <Path x:Name="ShapeOn"
+                          Grid.Column="1" Grid.ColumnSpan="2"
+                          Data="M0,0 L30,0 30,30 -30,30 z"
+                          Stretch="Fill"
+                          Fill="#38abcf" HorizontalAlignment="Right" />
+
+                        <Border Name="BorderLeftDown"
+                            Grid.Row="2" Grid.Column="0"
+                            Background="{TemplateBinding BorderBrush}"
+                            Opacity="{Binding ElementName=ShapeOff, Path=Opacity}"/>
+
+                        <Border Name="BorderRightDown"
+                            Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                            Background="{TemplateBinding BorderBrush}"
+                            Opacity="{Binding ElementName=ShapeOn, Path=Opacity}"/>
+
+                        <TextBlock Text="Blue" Grid.Column="2"
+                               Name="TextBlockOn"
+                               Foreground="{TemplateBinding Foreground}"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" 
+                               Opacity="{Binding ElementName=ShapeOn, Path=Opacity}"/>
+
+                        <TextBlock Text="Black" Grid.Column="0"
+                               Name="TextBlockOff"
+                               Foreground="{TemplateBinding Foreground}"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" 
+                               Opacity="{Binding ElementName=ShapeOff, Path=Opacity}"/>
+
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="#d9d9d9" />
+                            <Setter TargetName="ShapeOn" Property="Fill" Value="#c2c2c2" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

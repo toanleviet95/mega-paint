@@ -1,0 +1,237 @@
+﻿<Window x:Name="MainForm" x:Class="MegaPaint.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:local="clr-namespace:MegaPaint"
+        xmlns:src="clr-namespace:MegaPaint"
+        mc:Ignorable="d"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="Mega Paint" 
+        WindowState="Maximized"
+        MinWidth="650"
+        MinHeight="650"
+        Loaded="MainForm_Loaded">
+    <Window.Resources>
+        <ResourceDictionary>
+            <VisualBrush x:Key="HatchBrush" TileMode="Tile" Viewport="0,0,15,15" ViewportUnits="Absolute" Viewbox="0,0,15,15" ViewboxUnits="Absolute">
+                <VisualBrush.Visual>
+                    <Grid Background="Black">
+                        <Path Data="M 0 15 L 15 0" Stroke="Gray" />
+                        <Path Data="M 0 0 L 15 15" Stroke="Gray" />
+                    </Grid>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <Menu.Resources>
+                <Image x:Key="New" Source="../../Resources/Images/New.ico"/>
+                <Image x:Key="Open" Source="../../Resources/Images/Open.ico"/>
+                <Image x:Key="Save" Source="../../Resources/Images/Save.ico"/>
+                <Image x:Key="SaveAs" Source="../../Resources/Images/SaveAs.ico"/>
+                <Image x:Key="Exit" Source="../../Resources/Images/Exit.ico"/>
+                <Image x:Key="Delete" Source="../../Resources/Images/Delete.ico"/>
+                <Image x:Key="SelectAll" Source="../../Resources/Images/Check.ico"/>
+                <Image x:Key="DeleteAll" Source="../../Resources/Images/DeleteAll.ico"/>
+                <Image x:Key="ResetRotate" Source="../../Resources/Images/ResetRotate.ico"/>
+                <Image x:Key="Visible" Source="../../Resources/Images/Visible.png"/>
+                <Image x:Key="MoveToFront" Source="../../Resources/Images/MoveToFront.png"/>
+                <Image x:Key="MoveToBack" Source="../../Resources/Images/MoveToBack.png"/>
+            </Menu.Resources>
+            <MenuItem x:Name="menuFile" Header="_File" ToolTip="Click here to create, open and save your picture">
+                <MenuItem x:Name="menuNew" Header="_New" Icon="{StaticResource New}" ToolTip="Create a new picture" Click="menuNew_Click"/>
+                <MenuItem x:Name="menuOpen" Header="_Open" Icon="{StaticResource Open}" ToolTip="Open an existing picture to edit as Object" Click="menuOpen_Click"/>
+                <MenuItem x:Name="menuSave" Header="_Save" Icon="{StaticResource Save}" ToolTip="Save the current picture as Object" Click="menuSave_Click" />
+                <MenuItem x:Name="menuSaveAs" Header="Save _As" Icon="{StaticResource SaveAs}" ToolTip="Save the current picture as Bitmap" Click="menuSaveAs_Click"/>
+                <MenuItem x:Name="menuExit" Header="E_xit" Icon="{StaticResource Exit}" Click="menuExit_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="menuEdit" Header="_Edit" ToolTip="Click here to edit your picture">
+                <MenuItem x:Name="menuSelectAll" Header="Selec_t all" ToolTip="Select all drawing object" Icon="{StaticResource SelectAll}" Click="menuSelectAll_Click"/>
+                <MenuItem x:Name="menuDeleteAll" Header="D_elete all" ToolTip="Delete all drawing object" Icon="{StaticResource DeleteAll}" Click="menuDeleteAll_Click"/>
+                <MenuItem x:Name="menuDelete" Header="_Delete" ToolTip="Delete all drawing object" Icon="{StaticResource Delete}" Click="menuDelete_Click" />
+                <MenuItem x:Name="menuResetRotate" Header="Reset _rotation" ToolTip="Reset rotated object" Icon="{StaticResource ResetRotate}" Click="menuResetRotate_Click" Loaded="menuResetRotate_Loaded"/>
+                <MenuItem x:Name="menuMoveToFront" Header="Move to _front" ToolTip="Move selected object to front" Icon="{StaticResource MoveToFront}" Click="menuMoveToFront_Click" />
+                <MenuItem x:Name="menuMoveToBack" Header="Move to _back" ToolTip="Move selected object to back" Icon="{StaticResource MoveToBack}" Click="menuMoveToBack_Click"/>
+            </MenuItem>
+            <MenuItem x:Name="menuLayer" Header="Default _Layer" ToolTip="Current layer" Icon="{StaticResource Visible}" Click="menuLayer_Click"></MenuItem>
+        </Menu>
+        <Grid x:Name="Grid_1" Grid.Row="1" Background="#993B3737">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Margin="5,5,5,5" Foreground="White" Grid.Column="0">
+                <GroupBox.Header>Clipboard</GroupBox.Header>
+                <src:ResponsivePanel>
+                    <Button x:Name="btnCut" Margin="5,5,5,5" Width="30" Height="30" Content="%" Style="{DynamicResource HoverButton}" FontFamily="Wingdings 2" FontSize="10" Foreground="White" ToolTip="Cut" Click="btnCut_Click" />
+                    <Button x:Name="btnCopy" Margin="5,5,5,5" Width="30" Height="30" Content="2" Style="{DynamicResource HoverButton}" FontFamily="Webdings" FontSize="10" Foreground="White" ToolTip="Copy" Click="btnCopy_Click" IsEnabledChanged="btnCopy_IsEnabledChanged" />
+                    <Button x:Name="btnPaste" Margin="5,5,5,5"  Width="30" Height="30" Content="¤" Style="{DynamicResource HoverButton}" FontFamily="Webdings" FontSize="10" Foreground="White" ToolTip="Paste" Click="btnPaste_Click" IsEnabledChanged="btnPaste_IsEnabledChanged" />
+                    <Button x:Name="btnUndo" Margin="5,5,5,5"  Width="30" Height="30" Content="Å" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="10" Foreground="White" ToolTip="Undo" Click="btnUndo_Click" IsEnabledChanged="btnUndo_IsEnabledChanged" />
+                    <Button x:Name="btnRedo" Margin="5,5,5,5"  Width="30" Height="30" Content="Æ" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="10" Foreground="White" ToolTip="Redo" Click="btnRedo_Click" IsEnabledChanged="btnRedo_IsEnabledChanged" />
+                </src:ResponsivePanel>
+            </GroupBox>
+            <GroupBox Margin="5,5,5,5" Foreground="White" Grid.Column="1">
+                <GroupBox.Header>Basic Shapes</GroupBox.Header>
+                <src:ResponsivePanel>
+                    <Button x:Name="btnLine" Margin="5,5,5,5" Width="30" Height="30" Content="—" Style="{DynamicResource HoverButton}" FontSize="10" Foreground="White" ToolTip="Line" Click="btnLine_Click"/>
+                    <Button x:Name="btnRectangle" Margin="5,5,5,5" Width="30" Height="30" Content="¨" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="10" Foreground="White" ToolTip="Rectangle" Click="btnRectangle_Click"/>
+                    <Button x:Name="btnEllipse" Margin="5,5,5,5" Width="30" Height="30" Content="¡" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="10" Foreground="White" ToolTip="Ellipse" Click="btnEllipse_Click"/>
+                </src:ResponsivePanel>
+            </GroupBox>
+            <GroupBox Margin="5,5,5,5" Foreground="White" Grid.Column="2">
+                <GroupBox.Header>Colors</GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="lblForeground" HorizontalAlignment="Center" Foreground="White" Grid.Row="0" Grid.Column="0" Content="ForeGround"/>
+                    <Label x:Name="lblBackground" HorizontalAlignment="Center" Foreground="White" Grid.Row="0" Grid.Column="1" Content="BackGround"/>
+                    <xctk:ColorPicker Grid.Row="1" Grid.Column="0" x:Name="lsbForeground" SelectedColorChanged="lsbForeground_SelectedColorChanged"/>
+                    <xctk:ColorPicker Grid.Row="1" Grid.Column="1" x:Name="lsbBackground" SelectedColorChanged="lsbBackground_SelectedColorChanged"/>
+                </Grid>
+            </GroupBox>
+        </Grid>
+        <Grid x:Name="Grid_2" Grid.Row="2" Background="#993B3737">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <GroupBox Margin="5,5,5,5" Foreground="White" Grid.Row="0">
+                    <GroupBox.Header>Tools</GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Button x:Name="btnSelect" Grid.Row="0" Content="ö" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="30" Foreground="White" ToolTip="Select, Move or Resize" Click="btnSelect_Click"/>
+                        <Button x:Name="btnPencil" Grid.Row="1" Content="!" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="30" Foreground="White" ToolTip="Pencil" Click="btnPencil_Click"/>
+                        <Button x:Name="btnText" Grid.Row="2" Content="A" Style="{DynamicResource HoverButton}" FontWeight="Bold" FontSize="30" Foreground="White" ToolTip="Insert text with custom style" Click="btnText_Click"/>
+                        <Button x:Name="btnImage" Grid.Row="3" Content="°" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="30" Foreground="White" ToolTip="Insert image with custom size" Click="btnImage_Click"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Rotate" Foreground="White" Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <src:ResponsivePanel Grid.Row="0">
+                            <Button x:Name="btnRotateLeft" Content="É" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="30" Foreground="White" ToolTip="Rotate Left" Click="btnRotateLeft_Click" IsEnabledChanged="btnRotateLeft_IsEnabledChanged"/>
+                            <Button x:Name="btnRotateRight" Content="Ê" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="30" Foreground="White" ToolTip="Rotate Right" Click="btnRotateRight_Click" IsEnabledChanged="btnRotateRight_IsEnabledChanged"/>
+                        </src:ResponsivePanel>
+                        <xctk:MaskedTextBox PromptChar=" " ValueDataType="{x:Type s:String}" Mask="000" x:Name="txtRotate" Height="25" TextAlignment="Center" Grid.Row="1"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Margin="5,5,5,5" Foreground="White" Grid.Row="2">
+                    <GroupBox.Header>Size</GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="25"/>
+                        </Grid.RowDefinitions>
+                        <Label HorizontalAlignment="Center" Content="Max" Foreground="White" Grid.Row="0" ToolTip="9px"/>
+                        <Slider x:Name="sliderSize" Grid.Row="1" Style="{DynamicResource StyleSlider}" HorizontalAlignment="Center" TickPlacement="Both" Maximum="9" TickFrequency="3" Orientation="Vertical" IsSnapToTickEnabled="True" ValueChanged="sliderSize_ValueChanged"/>
+                        <Label HorizontalAlignment="Center" Content="Min" Foreground="White" Grid.Row="2" ToolTip="1px"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Theme Styles" Foreground="White" Grid.Row="3">
+                    <ToggleButton x:Name="btnTheme" Style="{DynamicResource ToggleButtonStyle}" Click="btnTheme_Click"/>
+                </GroupBox>
+            </Grid>
+            <StackPanel Orientation="Vertical" Grid.Column="2">
+                <Expander Foreground="White" IsExpanded="False">
+                    <Expander.Header>Brushes</Expander.Header>
+                    <GroupBox Header="Type of brush">
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton x:Name="cbxNormal" Margin="0,5,0,5" Foreground="White" GroupName="Brushes" Checked="cbxNormal_Checked">Normal</RadioButton>
+                            <RadioButton x:Name="cbxDot" Margin="0,5,0,5" Foreground="White" GroupName="Brushes" Checked="cbxDot_Checked">Dot</RadioButton>
+                            <RadioButton x:Name="cbxDash" Margin="0,5,0,5" Foreground="White" GroupName="Brushes" Checked="cbxDash_Checked">Dash</RadioButton>
+                            <RadioButton x:Name="cbxDoubleLine" Margin="0,5,0,5" Foreground="White" GroupName="Brushes" Checked="cbxDoubleLine_Checked">Double Line</RadioButton>
+                            <RadioButton x:Name="cbxDashArrow" Margin="0,5,0,5" Foreground="White" GroupName="Brushes" Checked="cbxDashArrow_Checked">Dash Arrow</RadioButton>
+                        </StackPanel>
+                    </GroupBox>
+                </Expander>
+                <StackPanel Margin="5,5,5,5" Background="CadetBlue">
+                    <CheckBox HorizontalAlignment="Center" x:Name="chkFillBackGround" Foreground="White" FontWeight="Bold" Checked="chkFillBackGround_Checked" Unchecked="chkFillBackGround_Unchecked">Filled</CheckBox>
+                </StackPanel>
+                <Expander x:Name="ExpFilledCustom" Foreground="White" IsExpanded="True">
+                    <Expander.Header>Filled Custom</Expander.Header>
+                    <GroupBox Header="Type of color">
+                        <UniformGrid Columns="2">
+                            <Button x:Name="btnFilledSolid" Foreground="White" FontWeight="Bold" Margin="5,5,5,5" Height="30" ToolTip="Solid" Click="btnFilledSolid_Click">
+                                <Button.Background>
+                                    <SolidColorBrush Color="Blue"/>
+                                </Button.Background>
+                            </Button>
+                            <Button x:Name="btnFilledGradient" Foreground="White" FontWeight="Bold" Margin="5,5,5,5" Height="30" ToolTip="Gradient" Click="btnFilledGradient_Click">
+                                <Button.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="Yellow" Offset="0.0" />
+                                        <GradientStop Color="Red" Offset="0.25" />
+                                        <GradientStop Color="Blue" Offset="0.75" />
+                                        <GradientStop Color="LimeGreen" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Button.Background>
+                            </Button>
+                            <Button x:Name="btnFilledHatch" Foreground="White" FontWeight="Bold" Margin="5,5,5,5" Background="{StaticResource HatchBrush}" Height="30" ToolTip="Hatch" Click="btnFilledHatch_Click"/>
+                            <Button x:Name="btnFilledTexture" Foreground="White" FontWeight="Bold" Margin="5,5,5,5" Height="30" ToolTip="Image" Click="btnFilledTexture_Click">
+                                <Button.Background>
+                                    <ImageBrush ImageSource="../../Resources/Images/ImageBrush.jpeg"
+                                                TileMode="FlipXY"
+                                                Viewport="0,0,25,25"
+                                                ViewportUnits="Absolute" />
+                                </Button.Background>
+                            </Button>
+                        </UniformGrid>
+                    </GroupBox>
+                </Expander>
+                <GroupBox Margin="5,5,5,5" FontSize="11" Foreground="White">
+                    <GroupBox.Header>Special Shapes</GroupBox.Header>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Button x:Name="btnTriangle" Grid.Row="0" Content="p" Style="{DynamicResource HoverButton}" FontFamily="Wingdings 3" FontSize="30" Foreground="White" ToolTip="Triangle" Click="btnTriangle_Click"/>
+                        <Button x:Name="btnRightTriangle" Grid.Row="1" Content="x" Style="{DynamicResource HoverButton}" FontFamily="Wingdings 3" FontSize="30" Foreground="White" ToolTip="Right Triangle" Click="btnRightTriangle_Click"/>
+                        <Button x:Name="btnRoundedRectangle" Grid.Row="2" Content="5" Style="{DynamicResource HoverButton}" FontFamily="Wingdings 2" FontSize="30" Foreground="White" ToolTip="Rounded Rectangle" Click="btnRoundedRectangle_Click"/>
+                        <Button x:Name="btnArrow" Grid.Row="3" Content="ð" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="30" Foreground="White" ToolTip="Arrow" Click="btnArrow_Click"/>
+                        <Button x:Name="btnStar" Grid.Row="4" Content="¶" Style="{DynamicResource HoverButton}" FontFamily="Wingdings" FontSize="30" Foreground="White" ToolTip="Star" Click="btnStar_Click"/>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+            <WindowsFormsHost Background="White" Margin="10,10,10,10" Grid.Column="1">
+                <src:DrawArea x:Name="DrawArea" MouseUp="DrawArea_MouseUp"></src:DrawArea>
+            </WindowsFormsHost>
+        </Grid>
+    </Grid>
+</Window>
